@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 186cd79e49e335248875c20a43dcd755, type: 3}
+  m_Script: {fileID: 11500000, guid: ac510c6d8ca5dff4e8407841530e3cd9, type: 3}
   m_Name: Plant1Shoot
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -629947213876709388, guid: 3c4ff5ed6b10d4d4fba77ec4f3f5f77d,
-    type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -37,6 +36,7 @@ MonoBehaviour:
   m_ColliderType: 1
   cost: 0
   actionText: 
-  description: A budding plant 1
-  growsInto: {fileID: 11400000, guid: f464acd1363ea004e890020c247b1d59, type: 2}
-  baseGrowthTurns: 5
+  turnsAlive: 0
+  turnsInto: {fileID: 0}
+  baseTurnsToTransform: 1
+  description: A tile in the game

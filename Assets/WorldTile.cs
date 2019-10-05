@@ -8,8 +8,12 @@ public class WorldTile : Tile
 {
     public int cost;
     public string actionText;
+    public WorldTile turnsInto;
+    public int baseTurnsToTransform = 1;
 
     public string description = "A tile in the game";
+
+    private int turnsAlive = 0;
 
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {
@@ -19,10 +23,5 @@ public class WorldTile : Tile
     public void DoSomeAction()
     {
         Debug.Log(actionText);
-    }
-
-    public virtual void EndTurnUpdate()
-    {
-
     }
 }

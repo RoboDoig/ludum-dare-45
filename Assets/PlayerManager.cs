@@ -12,7 +12,7 @@ public class PlayerManager : MonoBehaviour
     public Tilemap selectorTiles;
 
     public WorldTile[] availableTiles;
-    public WorldTile[,] worldTiles;
+    public WorldTileData[,] worldTilesData;
 
     public WorldTileSelector defaultSelector;
     private Vector3Int currentSelected;
@@ -37,14 +37,15 @@ public class PlayerManager : MonoBehaviour
         yMin = gameTiles.cellBounds.yMin;
         totalTiles = sizeXTiles * sizeYTiles;
 
-        worldTiles = new WorldTile[sizeXTiles, sizeYTiles];
+        worldTilesData = new WorldTileData[sizeXTiles, sizeYTiles];
 
         foreach (Vector3Int pos in gameTiles.cellBounds.allPositionsWithin)
         {
             int x = pos[0] - xMin;
             int y = pos[1] - yMin;
 
-            worldTiles[x, y] = GetTileAtPoint(pos);
+            WorldTile tile = GetTileAtPoint(pos);
+            worldTilesData[x, y] = new WorldTileData(new Vector3Int(pos[0], pos[1], pos[2]), tile.baseTurnsToTransform);
         }
     }
 
@@ -60,14 +61,11 @@ public class PlayerManager : MonoBehaviour
 
                 // Get tile at that point
                 Vector3Int selectedCell = SelectedCell(point);
+                Debug.Log(selectedCell);
                 WorldTile tile = GetTileAtPoint(selectedCell);
-                Debug.Log(tile);
-
-                // Change to a different tile
-                //gameTiles.SetTile(selectedCell, availableTiles[2]);
 
                 // Make change to UI
-                hud.TileSelected(tile);
+                hud.TileSelected(tile, GetTilePointData(selectedCell));
 
                 // Draw selector
                 selectorTiles.SetTile(currentSelected, null);
@@ -87,13 +85,44 @@ public class PlayerManager : MonoBehaviour
         return (WorldTile)gameTiles.GetTile(selectedCell);
     }
 
-    public void EndTurn()
+    public Vector2Int TilePointToIndex(Vector3Int selectedCell)
     {
-        Debug.Log("End turn.");
+        return new Vector2Int(selectedCell[0] - xMin, selectedCell[1] - yMin);
     }
 
-    // TODO - generalise to all placement?
-    public void PlacePlant1(WorldTile tile)
+    public WorldTileData GetTilePointData(Vector3Int selectedCell)
+    {
+        Vector2Int index = TilePointToIndex(selectedCell);
+        return worldTilesData[index[0], index[1]];
+    }
+
+    public void EndTurn()
+    {
+        // Loop through all tiles in the game
+        foreach (Vector3Int cell in gameTiles.cellBounds.allPositionsWithin)
+        {
+            // Base tile type
+            WorldTile tile = GetTileAtPoint(cell);
+
+            // Position in data matrix
+            int x = cell[0] - xMin;
+            int y = cell[1] - yMin;
+            // Tile has been alive for one more turn
+            worldTilesData[x, y].AdvanceTurn();
+
+            // Growing / decaying logic
+            if (worldTilesData[x, y].turnsAlive >= tile.baseTurnsToTransform)
+            {
+                if (tile.turnsInto)
+                {
+                    gameTiles.SetTile(cell, tile.turnsInto);
+                    worldTilesData[x, y].UpdateTile(tile.baseTurnsToTransform);
+                }
+            }
+        }
+    }
+
+    public void PlaceTile(WorldTile tile)
     {
         gameTiles.SetTile(currentSelected, tile);
     }
