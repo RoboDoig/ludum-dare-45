@@ -16,16 +16,31 @@ public class PlayerManager : MonoBehaviour
 
     public HUD hud;
 
+    private int sizeXTiles;
+    private int xMin;
+    private int sizeYTiles;
+    private int yMin;
+    private int totalTiles;
+
     // Start is called before the first frame update
     void Start()
     {
-        int tileCount = 0;
+        Vector3Int dimensions = gameTiles.size;
+        sizeXTiles = dimensions[0];
+        xMin = gameTiles.cellBounds.xMin;
+        sizeYTiles = dimensions[1];
+        yMin = gameTiles.cellBounds.yMin;
+        totalTiles = sizeXTiles * sizeYTiles;
+
+        worldTiles = new WorldTile[sizeXTiles, sizeYTiles];
+
         foreach (Vector3Int pos in gameTiles.cellBounds.allPositionsWithin)
         {
-            tileCount++;
-            Debug.Log(pos);
+            int x = pos[0] - xMin;
+            int y = pos[1] - yMin;
+
+            worldTiles[x, y] = GetTileAtPoint(pos);
         }
-        Debug.Log(tileCount);
     }
 
     // Update is called once per frame
@@ -44,7 +59,7 @@ public class PlayerManager : MonoBehaviour
                 Debug.Log(tile);
 
                 // Change to a different tile
-                gameTiles.SetTile(selectedCell, availableTiles[2]);
+                //gameTiles.SetTile(selectedCell, availableTiles[2]);
 
                 // Make change to UI
                 hud.TileSelected(tile);
@@ -60,5 +75,10 @@ public class PlayerManager : MonoBehaviour
     public WorldTile GetTileAtPoint(Vector3Int selectedCell)
     {
         return (WorldTile)gameTiles.GetTile(selectedCell);
+    }
+
+    public void EndTurn()
+    {
+        Debug.Log("End turn.");
     }
 }
