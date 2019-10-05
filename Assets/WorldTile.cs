@@ -10,7 +10,9 @@ public class WorldTile : Tile
     public string actionText;
     public WorldTile turnsInto;
     public int baseTurnsToTransform = 1;
+    public int startingWater = 10;
 
+    public string type;
     public string description = "A tile in the game";
 
     private int turnsAlive = 0;

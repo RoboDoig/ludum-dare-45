@@ -7,6 +7,7 @@ public class WorldTileData
     public Vector3Int position;
     public int baseTurnsToTransform;
     public int turnsAlive;
+    public int currentWater;
 
     public WorldTileData(Vector3Int _position, int _baseTurnsToTransform)
     {
