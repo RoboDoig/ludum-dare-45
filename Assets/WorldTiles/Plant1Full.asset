@@ -34,8 +34,13 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  cost: 1
-  actionText: 
-  turnsInto: {fileID: 0}
-  baseTurnsToTransform: 1
+  type: plant
   description: A fully grown plant 1
+  openForPlacement: 0
+  cost: 1
+  turnsInto: {fileID: 0}
+  degradesInto: {fileID: 0}
+  startingWater: 10
+  waterToTransform: 40
+  waterToDegrade: 0
+  waterDrain: 5

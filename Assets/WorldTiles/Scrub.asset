@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac510c6d8ca5dff4e8407841530e3cd9, type: 3}
-  m_Name: Plant2Full
+  m_Name: Scrub
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -5333196241405102358, guid: 3c4ff5ed6b10d4d4fba77ec4f3f5f77d,
+  m_Sprite: {fileID: -6527911106102338965, guid: 3c4ff5ed6b10d4d4fba77ec4f3f5f77d,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
@@ -35,13 +35,13 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  type: plant
-  description: A fully grown plant 2
-  openForPlacement: 0
-  cost: 1
-  turnsInto: {fileID: 0}
+  type: World tile
+  description: A tile in the game
+  openForPlacement: 1
+  cost: 0
+  turnsInto: {fileID: 11400000, guid: 54b0bfe99c25de14e98bdc72b48b1d39, type: 2}
   degradesInto: {fileID: 0}
-  startingWater: 10
-  waterToTransform: 40
+  startingWater: 0
+  waterToTransform: 1
   waterToDegrade: 0
-  waterDrain: 5
+  waterDrain: 0

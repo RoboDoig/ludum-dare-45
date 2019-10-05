@@ -21,6 +21,7 @@ public class PlayerManager : MonoBehaviour
     public int baseActionPoints = 10;
     private int actionPointsLeft;
     private int turnsUsed = 0;
+    private int waterAvailable = 1000;
 
     private int sizeXTiles;
     private int xMin;
@@ -32,15 +33,16 @@ public class PlayerManager : MonoBehaviour
 
     public AudioClip placeTileSuccess;
     public AudioClip endTurn;
-    public AudioClip placeTileFail;
+    public AudioClip fail;
+    public AudioClip waterSuccess;
 
-    private AudioSource audio;
+    private AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
     {
         // components
-        audio = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
 
         // populate player parameters
         actionPointsLeft = baseActionPoints;
@@ -63,11 +65,11 @@ public class PlayerManager : MonoBehaviour
             int y = pos[1] - yMin;
 
             WorldTile tile = GetTileAtPoint(pos);
-            worldTilesData[x, y] = new WorldTileData(new Vector3Int(pos[0], pos[1], pos[2]), tile.baseTurnsToTransform);
+            worldTilesData[x, y] = new WorldTileData(new Vector3Int(pos[0], pos[1], pos[2]), tile);
         }
 
         // update HUD with starting values
-        hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed);
+        hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed, waterAvailable);
     }
 
     // Update is called once per frame
@@ -133,12 +135,21 @@ public class PlayerManager : MonoBehaviour
             worldTilesData[x, y].AdvanceTurn();
 
             // Growing / decaying logic
-            if (worldTilesData[x, y].turnsAlive >= tile.baseTurnsToTransform)
+            if (worldTilesData[x, y].currentWater >= tile.waterToTransform)
             {
                 if (tile.turnsInto)
                 {
                     gameTiles.SetTile(cell, tile.turnsInto);
-                    worldTilesData[x, y].UpdateTile(tile.baseTurnsToTransform);
+                    worldTilesData[x, y].UpdateTile(tile);
+                }
+            }
+
+            if (worldTilesData[x, y].currentWater <= tile.waterToDegrade)
+            {
+                if (tile.degradesInto)
+                {
+                    gameTiles.SetTile(cell, tile.degradesInto);
+                    worldTilesData[x, y].UpdateTile(tile);
                 }
             }
         }
@@ -151,11 +162,11 @@ public class PlayerManager : MonoBehaviour
         actionPointsLeft = baseActionPoints;
 
         // Play audio
-        audio.clip = endTurn;
-        audio.Play();
+        audioSource.clip = endTurn;
+        audioSource.Play();
 
         // Update HUD
-        hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed);
+        hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed, waterAvailable);
     }
 
     public void PlaceTile(WorldTile tile)
@@ -166,15 +177,15 @@ public class PlayerManager : MonoBehaviour
             Debug.Log(currentSelected);
             actionPointsLeft -= tile.cost;
 
-            hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed);
+            hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed, waterAvailable);
 
-            audio.clip = placeTileSuccess;
-            audio.Play();
+            audioSource.clip = placeTileSuccess;
+            audioSource.Play();
         } else
         {
             // play deny sound
-            audio.clip = placeTileFail;
-            audio.Play();
+            audioSource.clip = fail;
+            audioSource.Play();
         }
     }
 
@@ -187,6 +198,31 @@ public class PlayerManager : MonoBehaviour
 
         gameTiles.SetTile(placePosition, tile);
         Vector2Int dataIndex = TilePointToIndex(placePosition);
-        worldTilesData[dataIndex[0], dataIndex[1]].UpdateTile(tile.baseTurnsToTransform);
+        worldTilesData[dataIndex[0], dataIndex[1]].UpdateTile(tile);
+    }
+
+    // TODO - hard coded water / AP amounts
+    public void WaterSelected()
+    {
+        if (actionPointsLeft >= 1 && waterAvailable >= 10)
+        {
+            Vector2Int selectedIndex = TilePointToIndex(currentSelected);
+            worldTilesData[selectedIndex[0], selectedIndex[1]].currentWater += 10;
+            waterAvailable -= 10;
+            actionPointsLeft -= 1;
+
+            audioSource.clip = waterSuccess;
+        } else
+        {
+            audioSource.clip = fail;
+        }
+        audioSource.Play();
+
+        hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed, waterAvailable);
+    }
+
+    public Vector2Int GetTileNeighbors()
+    {
+        return new Vector2Int();
     }
 }

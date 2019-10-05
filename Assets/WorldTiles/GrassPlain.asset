@@ -35,6 +35,13 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  cost: 0
-  actionText: Grass action
+  type: 
   description: It's just grass, chill out
+  openForPlacement: 0
+  cost: 0
+  turnsInto: {fileID: 0}
+  degradesInto: {fileID: 11400000, guid: 4d4d4ba7ae8b3514fbdca62a23830939, type: 2}
+  startingWater: 10
+  waterToTransform: 20
+  waterToDegrade: 0
+  waterDrain: 0

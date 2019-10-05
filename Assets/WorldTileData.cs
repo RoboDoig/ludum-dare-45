@@ -5,25 +5,27 @@ using UnityEngine;
 public class WorldTileData
 {
     public Vector3Int position;
-    public int baseTurnsToTransform;
     public int turnsAlive;
     public int currentWater;
 
-    public WorldTileData(Vector3Int _position, int _baseTurnsToTransform)
+    public WorldTileData(Vector3Int _position, WorldTile _tile)
     {
         position = _position;
-        baseTurnsToTransform = _baseTurnsToTransform;
         turnsAlive = 0;
+        currentWater = _tile.startingWater;
     }
 
     public void AdvanceTurn()
     {
         turnsAlive++;
+        if (currentWater > 0)
+        {
+            currentWater--;
+        }
     }
 
-    public void UpdateTile(int _baseTurnsToTransform)
+    public void UpdateTile(WorldTile tile)
     {
-        baseTurnsToTransform = _baseTurnsToTransform;
         turnsAlive = 0;
     }
 }

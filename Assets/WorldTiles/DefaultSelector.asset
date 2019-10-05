@@ -35,6 +35,10 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  cost: 0
-  actionText: 
+  type: selector
   description: Default selector tile
+  openForPlacement: 0
+  cost: 0
+  turnsInto: {fileID: 0}
+  baseTurnsToTransform: 1
+  startingWater: 10
