@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 186cd79e49e335248875c20a43dcd755, type: 3}
-  m_Name: Plant1Mid
+  m_Name: Plant2Grown
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -6018672261774061107, guid: 3c4ff5ed6b10d4d4fba77ec4f3f5f77d,
+  m_Sprite: {fileID: -5333196241405102358, guid: 3c4ff5ed6b10d4d4fba77ec4f3f5f77d,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
@@ -38,5 +38,5 @@ MonoBehaviour:
   cost: 0
   actionText: 
   description: A tile in the game
-  growsInto: {fileID: 11400000, guid: 7b8d9a85ebbde864a93ccb2ab8cc28c6, type: 2}
-  baseGrowthTurns: 5
+  growsInto: {fileID: 0}
+  baseGrowthTurns: 0

@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac510c6d8ca5dff4e8407841530e3cd9, type: 3}
-  m_Name: PathLeftCorner
+  m_Script: {fileID: 11500000, guid: 186cd79e49e335248875c20a43dcd755, type: 3}
+  m_Name: Plant2Mid
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -2056093210313885245, guid: 3c4ff5ed6b10d4d4fba77ec4f3f5f77d,
+  m_Sprite: {fileID: 3481202962429238868, guid: 3c4ff5ed6b10d4d4fba77ec4f3f5f77d,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
@@ -35,5 +35,8 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  cost: 1
-  actionText: Path left corner action
+  cost: 0
+  actionText: 
+  description: A tile in the game
+  growsInto: {fileID: 11400000, guid: 4807ea9f58f38f24f94063ce6196fb31, type: 2}
+  baseGrowthTurns: 0

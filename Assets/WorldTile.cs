@@ -21,8 +21,8 @@ public class WorldTile : Tile
         Debug.Log(actionText);
     }
 
-    public void ChangeTile(WorldTile tile)
+    public virtual void EndTurnUpdate()
     {
-        
+
     }
 }

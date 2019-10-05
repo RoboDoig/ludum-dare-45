@@ -14,7 +14,12 @@ public class PlayerManager : MonoBehaviour
     public WorldTile[] availableTiles;
     public WorldTile[,] worldTiles;
 
+    public WorldTileSelector defaultSelector;
+    private Vector3Int currentSelected;
+
     public HUD hud;
+
+    public int actionPointsLeft = 10;
 
     private int sizeXTiles;
     private int xMin;
@@ -63,6 +68,11 @@ public class PlayerManager : MonoBehaviour
 
                 // Make change to UI
                 hud.TileSelected(tile);
+
+                // Draw selector
+                selectorTiles.SetTile(currentSelected, null);
+                selectorTiles.SetTile(selectedCell, defaultSelector);
+                currentSelected = selectedCell;
             }
         }
     }
@@ -80,5 +90,11 @@ public class PlayerManager : MonoBehaviour
     public void EndTurn()
     {
         Debug.Log("End turn.");
+    }
+
+    // TODO - generalise to all placement?
+    public void PlacePlant1(WorldTile tile)
+    {
+        gameTiles.SetTile(currentSelected, tile);
     }
 }
