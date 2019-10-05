@@ -7,11 +7,9 @@ using UnityEngine.EventSystems;
 
 public class PlayerManager : MonoBehaviour
 {
-
     public Tilemap gameTiles;
     public Tilemap selectorTiles;
 
-    public WorldTile[] availableTiles;
     public WorldTileData[,] worldTilesData;
 
     public WorldTileSelector defaultSelector;
@@ -19,7 +17,9 @@ public class PlayerManager : MonoBehaviour
 
     public HUD hud;
 
-    public int actionPointsLeft = 10;
+    public int baseActionPoints = 10;
+    private int actionPointsLeft;
+    private int turnsUsed = 0;
 
     private int sizeXTiles;
     private int xMin;
@@ -27,9 +27,22 @@ public class PlayerManager : MonoBehaviour
     private int yMin;
     private int totalTiles;
 
+    public AudioClip placeTileSuccess;
+    public AudioClip endTurn;
+    public AudioClip placeTileFail;
+
+    private AudioSource audio;
+
     // Start is called before the first frame update
     void Start()
     {
+        // components
+        audio = GetComponent<AudioSource>();
+
+        // populate player parameters
+        actionPointsLeft = baseActionPoints;
+
+        // populate tile data
         Vector3Int dimensions = gameTiles.size;
         sizeXTiles = dimensions[0];
         xMin = gameTiles.cellBounds.xMin;
@@ -47,6 +60,9 @@ public class PlayerManager : MonoBehaviour
             WorldTile tile = GetTileAtPoint(pos);
             worldTilesData[x, y] = new WorldTileData(new Vector3Int(pos[0], pos[1], pos[2]), tile.baseTurnsToTransform);
         }
+
+        // update HUD with starting values
+        hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed);
     }
 
     // Update is called once per frame
@@ -120,10 +136,35 @@ public class PlayerManager : MonoBehaviour
                 }
             }
         }
+
+        // Update turns used
+        turnsUsed++;
+        actionPointsLeft = baseActionPoints;
+
+        // Play audio
+        audio.clip = endTurn;
+        audio.Play();
+
+        // Update HUD
+        hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed);
     }
 
     public void PlaceTile(WorldTile tile)
     {
-        gameTiles.SetTile(currentSelected, tile);
+        if (actionPointsLeft >= tile.cost)
+        {
+            gameTiles.SetTile(currentSelected, tile);
+            actionPointsLeft -= tile.cost;
+
+            hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed);
+
+            audio.clip = placeTileSuccess;
+            audio.Play();
+        } else
+        {
+            // play deny sound
+            audio.clip = placeTileFail;
+            audio.Play();
+        }
     }
 }
