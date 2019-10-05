@@ -9,6 +9,8 @@ public class WorldTile : Tile
     public int cost;
     public string actionText;
 
+    public string description = "A tile in the game";
+
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {
         base.GetTileData(position, tilemap, ref tileData);
@@ -17,5 +19,10 @@ public class WorldTile : Tile
     public void DoSomeAction()
     {
         Debug.Log(actionText);
+    }
+
+    public void ChangeTile(WorldTile tile)
+    {
+        
     }
 }

@@ -5,8 +5,8 @@ using UnityEngine.Tilemaps;
 
 public class MainControl : MonoBehaviour
 {
-
     public Tilemap gameTiles;
+    public Tilemap selectorTiles;
 
     // Start is called before the first frame update
     void Start()
