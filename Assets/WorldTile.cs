@@ -12,6 +12,8 @@ public class WorldTile : Tile
     public string type = "World tile";
     public string description = "A tile in the game";
     public bool openForPlacement = true;
+    public int waterDrain = 0;
+    public int waterLeak = 0;
 
     // Actionable tiles
     public int cost;
@@ -22,7 +24,6 @@ public class WorldTile : Tile
     public int startingWater = 10;
     public int waterToTransform = 20;
     public int waterToDegrade = 0;
-    public int waterDrain = 0;
 
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {

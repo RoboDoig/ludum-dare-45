@@ -40,6 +40,7 @@ public class WorldTileData
         }
     }
 
+    // Drain water from this tile
     public int DrainWater(int amount)
     {
         if (amount > 0)

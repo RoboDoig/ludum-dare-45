@@ -37,10 +37,11 @@ MonoBehaviour:
   type: plant
   description: A fully grown plant 1
   openForPlacement: 0
+  waterDrain: 0
+  waterLeak: 200
   cost: 1
   turnsInto: {fileID: 0}
   degradesInto: {fileID: 11400000, guid: 4d4d4ba7ae8b3514fbdca62a23830939, type: 2}
   startingWater: 10
   waterToTransform: 40
   waterToDegrade: 0
-  waterDrain: 0

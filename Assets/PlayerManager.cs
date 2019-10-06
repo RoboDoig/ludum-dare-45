@@ -151,16 +151,28 @@ public class PlayerManager : MonoBehaviour
                 }
             }
 
-            // Water drain logic
+            // Water drain / leak logic
             // Get neighbors
             List<Vector2Int> indexNeighbors = GetIndexNeighbors(TilePointToIndex(cell));
-            // Then drain each one
+            // Then drain / leak into each one
             foreach (Vector2Int neighbor in indexNeighbors)
             {
+                // draining from
                 int drainAmount = tile.waterDrain;
                 int amountDrained = worldTilesData[neighbor[0], neighbor[1]].DrainWater(drainAmount);
                 worldTilesData[x, y].AddWater(drainAmount);
             }
+            // leaking to neighbors
+            for (int l = 0; l < tile.waterLeak; l++)
+            {
+                Vector2Int neighbor = indexNeighbors[Random.Range(0, indexNeighbors.Count)];
+                if (worldTilesData[x, y].WaterAmount() > 0)
+                {
+                    worldTilesData[neighbor[0], neighbor[1]].AddWater(1);
+                    worldTilesData[x, y].DrainWater(1);
+                }
+            }
+
         }
 
         // Place random danger tiles
@@ -216,9 +228,7 @@ public class PlayerManager : MonoBehaviour
         int yPos = Random.Range(yMin, yMax);
         Vector3Int placePosition = new Vector3Int(xPos, yPos, 0);
 
-        gameTiles.SetTile(placePosition, tile);
-        Vector2Int dataIndex = TilePointToIndex(placePosition);
-        worldTilesData[dataIndex[0], dataIndex[1]].UpdateTile(tile);
+        PlaceTile(tile, placePosition);
     }
 
     // TODO - hard coded water / AP amounts
