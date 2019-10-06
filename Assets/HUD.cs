@@ -20,7 +20,7 @@ public class HUD : MonoBehaviour
         selectedImage.sprite = tile.sprite;
         selectedDescription.text = tile.description;
         selectedTurnsAlive.text = "Turns alive: " + tileData.turnsAlive.ToString();
-        selectedWaterLevel.text = "Water: " + tileData.currentWater.ToString();
+        selectedWaterLevel.text = "Water: " + tileData.WaterAmount().ToString();
     }
 
     public void UpdateStatusIndicators(int actionPoints, int turnsUsed, int waterAvailable)

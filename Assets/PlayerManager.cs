@@ -21,7 +21,7 @@ public class PlayerManager : MonoBehaviour
     public int baseActionPoints = 10;
     private int actionPointsLeft;
     private int turnsUsed = 0;
-    private int waterAvailable = 1000;
+    private int waterAvailable = 10000;
 
     private int sizeXTiles;
     private int xMin;
@@ -84,12 +84,7 @@ public class PlayerManager : MonoBehaviour
 
                 // Get tile at that point
                 Vector3Int selectedCell = SelectedCell(point);
-                //Debug.Log(selectedCell);
-                Debug.Log(TilePointToIndex(selectedCell));
                 WorldTile tile = GetTileAtPoint(selectedCell);
-
-                // Get neighbors
-                //Vector2Int[] indexNeighbors = GetIndexNeighbors(TilePointToIndex(selectedCell));
 
                 // Make change to UI
                 hud.TileSelected(tile, GetTilePointData(selectedCell));
@@ -138,7 +133,7 @@ public class PlayerManager : MonoBehaviour
             worldTilesData[x, y].AdvanceTurn();
 
             // Growing / decaying logic
-            if (worldTilesData[x, y].currentWater >= tile.waterToTransform)
+            if (worldTilesData[x, y].WaterAmount() >= tile.waterToTransform)
             {
                 if (tile.turnsInto)
                 {
@@ -147,7 +142,7 @@ public class PlayerManager : MonoBehaviour
                 }
             }
 
-            if (worldTilesData[x, y].currentWater <= tile.waterToDegrade)
+            if (worldTilesData[x, y].WaterAmount() <= tile.waterToDegrade)
             {
                 if (tile.degradesInto)
                 {
@@ -159,12 +154,12 @@ public class PlayerManager : MonoBehaviour
             // Water drain logic
             // Get neighbors
             List<Vector2Int> indexNeighbors = GetIndexNeighbors(TilePointToIndex(cell));
-            Debug.Log(indexNeighbors.Count);
             // Then drain each one
             foreach (Vector2Int neighbor in indexNeighbors)
             {
                 int drainAmount = tile.waterDrain;
-                //worldTilesData[neighbor[0], neighbor[1]].currentWater -= drainAmount;
+                int amountDrained = worldTilesData[neighbor[0], neighbor[1]].DrainWater(drainAmount);
+                worldTilesData[x, y].AddWater(drainAmount);
             }
         }
 
@@ -183,7 +178,14 @@ public class PlayerManager : MonoBehaviour
         hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed, waterAvailable);
     }
 
-    public void PlaceTile(WorldTile tile)
+    public void PlaceTile(WorldTile tile, Vector3Int position)
+    {
+        gameTiles.SetTile(position, tile);
+        Vector2Int dataIndex = TilePointToIndex(position);
+        worldTilesData[dataIndex[0], dataIndex[1]].UpdateTile(tile);
+    }
+
+    public void UserPlaceTile(WorldTile tile)
     {
         if (actionPointsLeft >= tile.cost)
         {
@@ -221,7 +223,7 @@ public class PlayerManager : MonoBehaviour
         if (actionPointsLeft >= 1 && waterAvailable >= 10)
         {
             Vector2Int selectedIndex = TilePointToIndex(currentSelected);
-            worldTilesData[selectedIndex[0], selectedIndex[1]].currentWater += 10;
+            worldTilesData[selectedIndex[0], selectedIndex[1]].AddWater(10);
             waterAvailable -= 10;
             actionPointsLeft -= 1;
 
@@ -243,7 +245,7 @@ public class PlayerManager : MonoBehaviour
         {
             for (int y = cellIndex[1]-1; y < cellIndex[1]+2; y++)
             {
-                if (!(x == cellIndex[0] && y == cellIndex[1]) && (x>=0 && y>=0) && (x<xMax && y<xMax))
+                if (!(x == cellIndex[0] && y == cellIndex[1]) && (x>=0 && y>=0) && (x<sizeXTiles && y<sizeYTiles))
                 {
                     outArray.Add(new Vector2Int(x, y));
                 }

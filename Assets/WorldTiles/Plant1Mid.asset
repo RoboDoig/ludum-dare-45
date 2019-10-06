@@ -40,8 +40,8 @@ MonoBehaviour:
   openForPlacement: 0
   cost: 1
   turnsInto: {fileID: 11400000, guid: 7b8d9a85ebbde864a93ccb2ab8cc28c6, type: 2}
-  degradesInto: {fileID: 0}
+  degradesInto: {fileID: 11400000, guid: 4d4d4ba7ae8b3514fbdca62a23830939, type: 2}
   startingWater: 10
   waterToTransform: 40
   waterToDegrade: 0
-  waterDrain: 5
+  waterDrain: 0

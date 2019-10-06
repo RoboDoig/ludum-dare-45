@@ -6,7 +6,7 @@ public class WorldTileData
 {
     public Vector3Int position;
     public int turnsAlive;
-    public int currentWater;
+    private int currentWater;
 
     public WorldTileData(Vector3Int _position, WorldTile _tile)
     {
@@ -20,12 +20,43 @@ public class WorldTileData
         turnsAlive++;
         if (currentWater > 0)
         {
-            currentWater--;
+            //currentWater--;
         }
     }
 
     public void UpdateTile(WorldTile tile)
     {
         turnsAlive = 0;
+    }
+
+    public void AddWater(int amount)
+    {
+        if (amount > 0)
+        {
+            currentWater += amount;
+        }
+    }
+
+    public int DrainWater(int amount)
+    {
+        if (amount > 0)
+        {
+            if (amount <= currentWater)
+            {
+                currentWater -= amount;
+                return amount;
+            }
+            else
+            {
+                currentWater = 0;
+                return currentWater;
+            }
+        }
+        return 0;
+    }
+
+    public int WaterAmount()
+    {
+        return currentWater;
     }
 }
