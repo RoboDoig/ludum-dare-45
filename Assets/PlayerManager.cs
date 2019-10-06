@@ -137,8 +137,8 @@ public class PlayerManager : MonoBehaviour
             {
                 if (tile.turnsInto)
                 {
-                    gameTiles.SetTile(cell, tile.turnsInto);
-                    worldTilesData[x, y].UpdateTile(tile);
+                    worldTilesData[x, y].SetOpenForPlacement(true);
+                    PlaceTile(tile.turnsInto, cell);
                 }
             }
 
@@ -146,8 +146,8 @@ public class PlayerManager : MonoBehaviour
             {
                 if (tile.degradesInto)
                 {
-                    gameTiles.SetTile(cell, tile.degradesInto);
-                    worldTilesData[x, y].UpdateTile(tile);
+                    worldTilesData[x, y].SetOpenForPlacement(true);
+                    PlaceTile(tile.degradesInto, cell);
                 }
             }
 
@@ -178,19 +178,25 @@ public class PlayerManager : MonoBehaviour
         hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed, waterAvailable);
     }
 
-    public void PlaceTile(WorldTile tile, Vector3Int position)
+    public bool PlaceTile(WorldTile tile, Vector3Int position)
     {
-        gameTiles.SetTile(position, tile);
         Vector2Int dataIndex = TilePointToIndex(position);
-        worldTilesData[dataIndex[0], dataIndex[1]].UpdateTile(tile);
+        if (worldTilesData[dataIndex[0], dataIndex[1]].OpenForPlacement())
+        {
+            gameTiles.SetTile(position, tile);
+            worldTilesData[dataIndex[0], dataIndex[1]].UpdateTile(tile);
+            return true;
+        }
+
+        return false;
     }
 
     public void UserPlaceTile(WorldTile tile)
     {
-        if (actionPointsLeft >= tile.cost)
+        bool tilePlaced = ((actionPointsLeft >= tile.cost) && PlaceTile(tile, currentSelected));
+
+        if (tilePlaced)
         {
-            gameTiles.SetTile(currentSelected, tile);
-            Debug.Log(currentSelected);
             actionPointsLeft -= tile.cost;
 
             hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed, waterAvailable);
@@ -199,7 +205,6 @@ public class PlayerManager : MonoBehaviour
             audioSource.Play();
         } else
         {
-            // play deny sound
             audioSource.clip = fail;
             audioSource.Play();
         }
@@ -210,7 +215,6 @@ public class PlayerManager : MonoBehaviour
         int xPos = Random.Range(xMin, xMax);
         int yPos = Random.Range(yMin, yMax);
         Vector3Int placePosition = new Vector3Int(xPos, yPos, 0);
-        Debug.Log(placePosition);
 
         gameTiles.SetTile(placePosition, tile);
         Vector2Int dataIndex = TilePointToIndex(placePosition);

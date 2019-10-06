@@ -7,12 +7,14 @@ public class WorldTileData
     public Vector3Int position;
     public int turnsAlive;
     private int currentWater;
+    private bool openForPlacement;
 
     public WorldTileData(Vector3Int _position, WorldTile _tile)
     {
         position = _position;
         turnsAlive = 0;
         currentWater = _tile.startingWater + Random.Range(-5, 5); //TODO hard-coded random int
+        openForPlacement = _tile.openForPlacement;
     }
 
     public void AdvanceTurn()
@@ -27,6 +29,7 @@ public class WorldTileData
     public void UpdateTile(WorldTile tile)
     {
         turnsAlive = 0;
+        openForPlacement = tile.openForPlacement;
     }
 
     public void AddWater(int amount)
@@ -58,5 +61,15 @@ public class WorldTileData
     public int WaterAmount()
     {
         return currentWater;
+    }
+
+    public bool OpenForPlacement()
+    {
+        return openForPlacement;
+    }
+
+    public void SetOpenForPlacement(bool state)
+    {
+        openForPlacement = state;
     }
 }

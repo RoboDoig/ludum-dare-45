@@ -36,8 +36,8 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   type: World tile
-  description: A tile in the game
-  openForPlacement: 1
+  description: Scrub
+  openForPlacement: 0
   cost: 0
   turnsInto: {fileID: 11400000, guid: 54b0bfe99c25de14e98bdc72b48b1d39, type: 2}
   degradesInto: {fileID: 0}
