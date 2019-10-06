@@ -12,7 +12,7 @@ public class WorldTileData
     {
         position = _position;
         turnsAlive = 0;
-        currentWater = _tile.startingWater;
+        currentWater = _tile.startingWater + Random.Range(-5, 5); //TODO hard-coded random int
     }
 
     public void AdvanceTurn()

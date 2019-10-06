@@ -84,9 +84,12 @@ public class PlayerManager : MonoBehaviour
 
                 // Get tile at that point
                 Vector3Int selectedCell = SelectedCell(point);
-                Debug.Log(selectedCell);
+                //Debug.Log(selectedCell);
                 Debug.Log(TilePointToIndex(selectedCell));
                 WorldTile tile = GetTileAtPoint(selectedCell);
+
+                // Get neighbors
+                //Vector2Int[] indexNeighbors = GetIndexNeighbors(TilePointToIndex(selectedCell));
 
                 // Make change to UI
                 hud.TileSelected(tile, GetTilePointData(selectedCell));
@@ -151,6 +154,17 @@ public class PlayerManager : MonoBehaviour
                     gameTiles.SetTile(cell, tile.degradesInto);
                     worldTilesData[x, y].UpdateTile(tile);
                 }
+            }
+
+            // Water drain logic
+            // Get neighbors
+            List<Vector2Int> indexNeighbors = GetIndexNeighbors(TilePointToIndex(cell));
+            Debug.Log(indexNeighbors.Count);
+            // Then drain each one
+            foreach (Vector2Int neighbor in indexNeighbors)
+            {
+                int drainAmount = tile.waterDrain;
+                //worldTilesData[neighbor[0], neighbor[1]].currentWater -= drainAmount;
             }
         }
 
@@ -221,8 +235,21 @@ public class PlayerManager : MonoBehaviour
         hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed, waterAvailable);
     }
 
-    public Vector2Int GetTileNeighbors()
+    public List<Vector2Int> GetIndexNeighbors(Vector2Int cellIndex)
     {
-        return new Vector2Int();
+        List<Vector2Int> outArray = new List<Vector2Int>();
+
+        for (int x = cellIndex[0]-1; x < cellIndex[0]+2; x++)
+        {
+            for (int y = cellIndex[1]-1; y < cellIndex[1]+2; y++)
+            {
+                if (!(x == cellIndex[0] && y == cellIndex[1]) && (x>=0 && y>=0) && (x<xMax && y<xMax))
+                {
+                    outArray.Add(new Vector2Int(x, y));
+                }
+            }
+        }
+
+        return outArray;
     }
 }
