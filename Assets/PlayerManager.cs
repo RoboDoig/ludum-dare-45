@@ -7,6 +7,10 @@ using UnityEngine.EventSystems;
 
 public class PlayerManager : MonoBehaviour
 {
+    // Game params
+    public int startingWater = 0;
+    public float weedSpawnProbability = 0.1f;
+
     public Tilemap gameTiles;
     public Tilemap selectorTiles;
     public WorldTile[] weedTiles;
@@ -21,7 +25,8 @@ public class PlayerManager : MonoBehaviour
     public int baseActionPoints = 10;
     private int actionPointsLeft;
     private int turnsUsed = 0;
-    private int waterAvailable = 10000;
+    private int waterAvailable = 0;
+    private bool placedWeedThisTurn = false;
 
     private int sizeXTiles;
     private int xMin;
@@ -35,6 +40,8 @@ public class PlayerManager : MonoBehaviour
     public AudioClip endTurn;
     public AudioClip fail;
     public AudioClip waterSuccess;
+    public AudioClip waterScoop;
+    public AudioClip weedAlert;
 
     private AudioSource audioSource;
 
@@ -46,6 +53,7 @@ public class PlayerManager : MonoBehaviour
 
         // populate player parameters
         actionPointsLeft = baseActionPoints;
+        waterAvailable = startingWater;
 
         // populate tile data
         Vector3Int dimensions = gameTiles.size;
@@ -132,7 +140,7 @@ public class PlayerManager : MonoBehaviour
             // Tile has been alive for one more turn
             worldTilesData[x, y].AdvanceTurn();
 
-            // Growing / decaying logic
+            // Growing / decaying / dying logic
             if (worldTilesData[x, y].WaterAmount() >= tile.waterToTransform)
             {
                 if (tile.turnsInto)
@@ -151,6 +159,18 @@ public class PlayerManager : MonoBehaviour
                 }
             }
 
+            if (tile.lifeTime > 0)
+            {
+                if (worldTilesData[x, y].turnsAlive > tile.lifeTime)
+                {
+                    if (tile.diesInto)
+                    {
+                        worldTilesData[x, y].SetOpenForPlacement(true);
+                        PlaceTile(tile.diesInto, cell);
+                    }
+                }
+            }
+
             // Water drain / leak logic
             // Get neighbors
             List<Vector2Int> indexNeighbors = GetIndexNeighbors(TilePointToIndex(cell));
@@ -166,7 +186,7 @@ public class PlayerManager : MonoBehaviour
             for (int l = 0; l < tile.waterLeak; l++)
             {
                 Vector2Int neighbor = indexNeighbors[Random.Range(0, indexNeighbors.Count)];
-                if (worldTilesData[x, y].WaterAmount() > 0)
+                if (worldTilesData[x, y].WaterAmount() > worldTilesData[neighbor[0], neighbor[1]].WaterAmount())
                 {
                     worldTilesData[neighbor[0], neighbor[1]].AddWater(1);
                     worldTilesData[x, y].DrainWater(1);
@@ -175,8 +195,15 @@ public class PlayerManager : MonoBehaviour
 
         }
 
-        // Place random danger tiles
-        PlaceTileRandomly(weedTiles[0]);
+        // Place random danger tiles - TODO, adjustment for how often, type
+        if (weedSpawnProbability > Random.Range(0f, 1f))
+        {
+            PlaceTileRandomly(weedTiles[0]);
+            audioSource.clip = weedAlert;
+            audioSource.Play();
+        }
+
+        // Plant spreading
 
         // Update turns used
         turnsUsed++;
@@ -246,6 +273,35 @@ public class PlayerManager : MonoBehaviour
         {
             audioSource.clip = fail;
         }
+        audioSource.Play();
+
+        hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed, waterAvailable);
+    }
+
+    public void ScoopWater()
+    {
+        if (actionPointsLeft >= 1)
+        {
+            Vector2Int selectedIndex = TilePointToIndex(currentSelected);
+            if (worldTilesData[selectedIndex[0], selectedIndex[1]].GetTileType().Equals("water"))
+            {
+                int drainAmount = worldTilesData[selectedIndex[0], selectedIndex[1]].DrainWater(10);
+
+                if (drainAmount > 0)
+                {
+                    waterAvailable += drainAmount;
+                    actionPointsLeft -= 1;
+                    audioSource.clip = waterScoop;
+                } else
+                {
+                    audioSource.clip = fail;
+                }
+            }
+        } else
+        {
+            audioSource.clip = fail;
+        }
+
         audioSource.Play();
 
         hud.UpdateStatusIndicators(actionPointsLeft, turnsUsed, waterAvailable);

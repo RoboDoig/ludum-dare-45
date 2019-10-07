@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac510c6d8ca5dff4e8407841530e3cd9, type: 3}
   m_Name: Scrub
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -6527911106102338965, guid: 3c4ff5ed6b10d4d4fba77ec4f3f5f77d,
+  m_Sprite: {fileID: 7478898287557892896, guid: 67dc0e0cf5ba27a4ba782aa0836f2c4b,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
@@ -38,10 +38,14 @@ MonoBehaviour:
   type: World tile
   description: Scrub
   openForPlacement: 0
+  waterDrain: 1
+  waterLeak: 0
+  lifeTime: 0
   cost: 0
   turnsInto: {fileID: 11400000, guid: 54b0bfe99c25de14e98bdc72b48b1d39, type: 2}
   degradesInto: {fileID: 0}
+  diesInto: {fileID: 0}
   startingWater: 0
   waterToTransform: 10
   waterToDegrade: 0
-  waterDrain: 1
+  spreadProbability: 0

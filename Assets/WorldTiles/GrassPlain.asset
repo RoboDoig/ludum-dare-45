@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac510c6d8ca5dff4e8407841530e3cd9, type: 3}
   m_Name: GrassPlain
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 7071876222525385644, guid: 3c4ff5ed6b10d4d4fba77ec4f3f5f77d,
+  m_Sprite: {fileID: -2780090619444320709, guid: 67dc0e0cf5ba27a4ba782aa0836f2c4b,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
@@ -36,12 +36,16 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   type: 
-  description: It's just grass, chill out
+  description: Normal grass
   openForPlacement: 1
+  waterDrain: 0
+  waterLeak: 1
+  lifeTime: 10
   cost: 0
-  turnsInto: {fileID: 0}
+  turnsInto: {fileID: 11400000, guid: f8f4739d45dbe9d41aa39c631d635681, type: 2}
   degradesInto: {fileID: 11400000, guid: 4d4d4ba7ae8b3514fbdca62a23830939, type: 2}
+  diesInto: {fileID: 0}
   startingWater: 10
   waterToTransform: 20
   waterToDegrade: 0
-  waterDrain: 0
+  spreadProbability: 0

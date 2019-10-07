@@ -38,7 +38,14 @@ MonoBehaviour:
   type: 
   description: A tile in the game
   openForPlacement: 0
+  waterDrain: 0
+  waterLeak: 0
+  lifeTime: 0
   cost: 0
   turnsInto: {fileID: 0}
-  baseTurnsToTransform: 1
+  degradesInto: {fileID: 0}
+  diesInto: {fileID: 0}
   startingWater: 10
+  waterToTransform: 20
+  waterToDegrade: 0
+  spreadProbability: 0
